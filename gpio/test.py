@@ -6,31 +6,33 @@ import time
 import sys
 
 gpio.setmode(gpio.BCM)
-gpio.setup(15, gpio.OUT)
+gpio.setup(21, gpio.OUT)
 
 def close(signal, frame):
-	s.close()
-	gpio.cleanup()
-	print('Goodbye')
-	sys.exit(0)
+    gpio.cleanup()
+    print('Goodbye')
+    sys.exit(0)
 
 signal.signal(signal.SIGINT, close)
 
 
 # Set String
 string = ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."
+timing = 0.1
 
+gpio.output(21, gpio.HIGH)
 while True:
-	for c in string:
-		if c == '.':
-			gpio.output(15, gpio.LOW)
-			sleep(0.15)
-		
-		if c == ' ' or c == '/':
-			gpio.output(15, gpio.LOW)
-			sleep(0.15)
-		
-		if c == '-':
-			gpio.output(15, gpio.HIGH)
-			sleep(0.45)
-	sleep(5)
+    for c in string:
+	gpio.output(21, gpio.HIGH)
+	if c == '.':
+		gpio.output(21, gpio.LOW)
+		time.sleep(timing)
+	
+	if c == ' ' or c == '/':
+		gpio.output(21, gpio.LOW)
+		time.sleep(timing)
+	
+	if c == '-':
+		time.sleep(timing * 3)
+	gpio.output(21, gpio.HIGH)
+    time.sleep(5)
