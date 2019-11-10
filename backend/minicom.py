@@ -49,12 +49,12 @@ bits = []
 
 while True:
 	line = s.readline().decode('ascii')
-        
-        if not line.startswith(header):
-            continue
+		
+	if not line.startswith(header):
+		continue
 
-        line = line[len(header):-1].strip()
+	line = line[len(header):-1].strip()
 	
-        #print(morse.hex_to_bits([line]))
+	#print(morse.hex_to_bits([line]))
 	(code, bits) = morse.decode(line, prev=bits, dot=3, dash=9, space=18)
 	
