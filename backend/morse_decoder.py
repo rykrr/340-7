@@ -96,7 +96,7 @@ def counts_to_code(counts, dotlen, dashlen, spacelen):
 	for i, count in enumerate(counts):
 		if count >= spacelen:
 			string += symbol_table[i%2][1]
-			length += 1
+			slen += 1
 			
 			if i%2:
 				code += string
@@ -124,11 +124,13 @@ def counts_to_code(counts, dotlen, dashlen, spacelen):
 def hex_to_bits(hexes):
 	bits = []
 	
-	for h in hexes:
-		value = int(h, 16)
-		
-		for i in range(32):
-			bits.append((value >> (31-i)) & 1)
+        if hexes == '':
+            continue
+	
+        value = int(hexes, 16)
+	
+        for i in range(32):
+	    bits.append((value >> (31-i)) & 1)
 	
 	return bits
 
@@ -136,15 +138,23 @@ def hex_to_bits(hexes):
 def code_to_string(code):
 	string = ''
 	for codon in code.split(' '):
+            if codon in decode_table:
 		string += decode_table[codon]
+            else:
+                string += '(?)'
 	return string
 
 
 
-def decode(hexes, prev=[], dot=1, dash=3, space=5):
+def decode(hexes, prev=[], dot=9, dash=27, space=30):
 	bits = hex_to_bits(hexes)
 	bits = prev + bits
 	bits = discard_leading_zeros(bits)
+        
+        if not len(bits):
+            return (('', ''), [])
+        print(bits)
+
 	counts = bits_to_counts(bits)
 	
 	(code, trailing) = counts_to_code(counts, dot, dash, space)
