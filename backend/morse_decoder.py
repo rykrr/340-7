@@ -160,4 +160,7 @@ def decode(hexes, prev=[], dot=9, dash=27, space=30):
 	(code, trailing) = counts_to_code(counts, dot, dash, space)
 	string = code_to_string(code)
 	
+	print("count: {}".format(trailing))
+	print("bits:  {}".format(counts_to_bits(trailing)))
+	
 	return ((code, string), counts_to_bits(trailing))
