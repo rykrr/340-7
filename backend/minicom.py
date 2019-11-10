@@ -6,18 +6,20 @@ import signal
 import sys
 import os
 
+FIFO='/tmp/morse.fifo'
 
 # Setup IPC #####################################
 #################################################
 
 try:
-	os.remove('/tmp/morse.fifo')
-	os.mkfifo('/tmp/morse.fifo')
+	if os.path.exists(FIFO):
+		os.remove(FIFO)
+	os.mkfifo(FIFO)
 except OSError:
 	print('Failed to launch')
 	exit(1)
 
-fifo = open('/tmp/morse.fifo', 'a')
+fifo = open(FIFO, 'a')
 
 
 # Setup Serial ##################################
