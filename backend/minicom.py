@@ -54,7 +54,15 @@ while True:
 		continue
 
 	line = line[len(header):-1].strip()
+        prec = bits
 	
-	#print(morse.hex_to_bits([line]))
-	(code, bits) = morse.decode(line, prev=bits, dot=3, dash=9, space=18)
+	(code, bits) = morse.decode(line, prev=bits, dot=5, dash=15, space=30)
+        (string, _) = code
+
+        if len(string):
+            print('')
+            print(prec)
+	    print(morse.hex_to_bits(line))
+            print(code)
+            print(bits)
 	
