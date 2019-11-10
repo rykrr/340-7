@@ -1,6 +1,7 @@
 #!/bin/python3
 
 encode_table = {
+	'':  '',
 	' ': '/',
 	'e': '.',
 	't': '-',
@@ -52,6 +53,19 @@ def bits_to_counts(bits):
 	return counts
 
 
+def counts_to_bits(counts):
+	if not len(counts):
+		return []
+	
+	bits = []
+	
+	for i, count in enumerate(counts):
+		for j in range(count):
+			bits.append(int(not (i%2)))
+	
+	return bits
+
+
 def discard_leading_zeros(bits):
 	if not len(bits):
 		return []
@@ -66,56 +80,57 @@ def discard_leading_zeros(bits):
 	return bits[discard_count:]
 
 
-def counts_to_code(counts, dotlen, dashlen, spacelen, error):
+def counts_to_code(counts, dotlen, dashlen, spacelen):
 	if not len(counts):
 		return []
 	
 	code = ''
-	bits = 0
-	size = 0
+	clen = 0
 	
-	letters = []
-
+	string = ''
+	slen = 0
+	
 	binary_table = [['0', '1', '1'], ['', ' ', ' / ']]
 	symbol_table = [['.', '-', '-'], ['', ' ', ' / ']]
 	
 	for i, count in enumerate(counts):
-		if count in range(dotlen - error, dotlen + error):
-			code += symbol_table[i%2][0]
+		if count >= spacelen:
+			string += symbol_table[i%2][1]
+			length += 1
 			
-		elif count in range(dashlen - error, dashlen + error):
-			code += symbol_table[i%2][1]
+			if i%2:
+				code += string
+				clen += slen
+				string = ''
+				slen = 0
 		
-		elif count in range(spacelen - error, spacelen - error):
-			code += symbol_table[i%2][1]
+		elif count >= dashlen:
+			string += symbol_table[i%2][1]
+			slen += 1
+			
+			if i%2:
+				code += string
+				clen += slen
+				string = ''
+				slen = 0
+		
+		elif count >= dotlen:
+			string += symbol_table[i%2][0]
+			slen += 1
 	
-	return code
+	return (code, counts[clen:])
 
 
 def hex_to_bits(hexes):
-	value = int(hexes, 16)
 	bits = []
 	
-	for i in range(32):
-		bits.append((value >> (31-i)) & 1)
+	for h in hexes:
+		value = int(h, 16)
+		
+		for i in range(32):
+			bits.append((value >> (31-i)) & 1)
 	
 	return bits
-
-
-def words_to_string(words):
-	string = ''
-	
-	for word in words:
-		for letter in word:
-			for symbol in word:
-				if symbol == 0:
-					string += '-'
-				else:
-					string += '.'
-		string += ' '
-	string += '/ '
-	
-	return string
 
 
 def code_to_string(code):
@@ -124,9 +139,15 @@ def code_to_string(code):
 		string += decode_table[codon]
 	return string
 
-sos = [0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0]
-b = discard_leading_zeros(sos)
-c = bits_to_counts(b)
-C = counts_to_code(c, 1, 3, 7, 1)
 
-print(code_to_string(C))
+
+def decode(hexes, prev=[], dot=1, dash=3, space=5):
+	bits = hex_to_bits(hexes)
+	bits = prev + bits
+	bits = discard_leading_zeros(bits)
+	counts = bits_to_counts(bits)
+	
+	(code, trailing) = counts_to_code(counts, dot, dash, space)
+	string = code_to_string(code)
+	
+	return ((code, string), counts_to_bits(trailing))
