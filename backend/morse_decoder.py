@@ -170,6 +170,7 @@ def decode(hexes, prev=[], dot=9, dash=27, space=30):
 	#print('Fuse:  {}'.format(bits))
 		
 	if not len(bits):
+		bits = counts_to_bits([1,32])
 		return (('', ''), [])
 
 	counts = bits_to_counts(bits)
