@@ -117,8 +117,8 @@ def counts_to_code(counts, dotlen, dashlen, spacelen):
 		elif count >= dotlen:
 			string += symbol_table[i%2][0]
 			slen += 1
-                else:
-                    clen += 1
+		else:
+			clen += 1
 	
 	return (code, counts[clen:])
 
@@ -147,15 +147,27 @@ def code_to_string(code):
 	return string
 
 
+def encode(string):
+	morse = ''
+	
+	for c in string:
+		if c in encode_table:
+			morse += encode_table[c] + ' '
+		else:
+			morse += '/ '
+	
+	return morse
+
 
 def decode(hexes, prev=[], dot=9, dash=27, space=30):
-        #print()
+	#print()
 	bits = hex_to_bits(hexes)
-        #print('New:   {}'.format(bits))
+	bits.reverse()
+	#print('New:   {}'.format(bits))
 	bits = prev + bits
-        #print('Prev:  {}'.format(prev))
+	#print('Prev:  {}'.format(prev))
 	bits = discard_leading_zeros(bits)
-        #print('Fuse:  {}'.format(bits))
+	#print('Fuse:  {}'.format(bits))
 		
 	if not len(bits):
 		return (('', ''), [])

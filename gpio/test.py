@@ -20,10 +20,10 @@ signal.signal(signal.SIGINT, close)
 string = ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."
 timing = 0.1
 
-gpio.output(21, gpio.HIGH)
 while True:
-    for c in string:
-	gpio.output(21, gpio.HIGH)
+	for c in string:
+		gpio.output(21, gpio.HIGH)
+	
 	if c == '.':
 		gpio.output(21, gpio.LOW)
 		time.sleep(timing)
@@ -35,4 +35,5 @@ while True:
 	if c == '-':
 		time.sleep(timing * 3)
 	gpio.output(21, gpio.HIGH)
-    time.sleep(5)
+	
+	time.sleep(5)
