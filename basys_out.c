@@ -94,10 +94,7 @@ int main()
 		digital_buffer = 0;
 		analog_buffer  = 0;
 	
-		for (int i = 0; i < 32; i++) {
-//			btn = XGpio_DiscreteRead(&gpio, 1);
-//			sw  = XGpio_DiscreteRead(&gpio1,1);
-		
+		for (int i = 0; i < 32; i++) {	
 			jbin  = XGpio_DiscreteRead(&gpio2,1);
 			digin = jbin & 0xF; //jb[3..0]
 			rpiin = (jbin & 0xF0)>>4; //jb[7..4];
@@ -105,8 +102,7 @@ int main()
 			digital_buffer |= !(digin&1) << i;
 			analog_buffer  |= ((XSysMon_GetAdcData(xadc_inst_ptr,sample[analog_pin])>>4) < 3000) << i;
 		
-			XGpio_DiscreteWrite(&gpio, 2, sw);
-			XGpio_DiscreteWrite(&gpio3, 1, !(digin&1));
+			XGpio_DiscreteWrite(&gpio3, 1, !(digin&1 || digin&2));
 
 			usleep_MB(10000);
 		}
