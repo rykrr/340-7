@@ -102,7 +102,7 @@ int main()
 			digital_buffer |= !(digin&1) << i;
 			analog_buffer  |= ((XSysMon_GetAdcData(xadc_inst_ptr,sample[analog_pin])>>4) < 3000) << i;
 		
-			XGpio_DiscreteWrite(&gpio3, 1, !(digin&1 || digin&2));
+			XGpio_DiscreteWrite(&gpio3, 1, !(digin&1 || rpiin&1));
 
 			usleep_MB(10000);
 		}
